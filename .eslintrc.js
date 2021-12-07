@@ -5,6 +5,7 @@ module.exports = {
     node: true,
   },
   extends: ['standard'],
+  // extends: ['prettier'],
   parserOptions: {
     ecmaVersion: 12,
   },
