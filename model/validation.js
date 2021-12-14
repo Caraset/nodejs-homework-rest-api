@@ -25,10 +25,22 @@ const contactSchemaNotReq = Joi.object({
   phone: phoneSchema,
 })
 
-export {
-  nameSchema,
-  emailSchema,
-  phoneSchema,
-  contactSchema,
-  contactSchemaNotReq,
+const postContactValidation = async (req, res, next) => {
+  try {
+    await contactSchema.validateAsync(req.body)
+    next()
+  } catch (error) {
+    next(error)
+  }
 }
+
+const patchContactValidation = async (req, res, next) => {
+  try {
+    await contactSchemaNotReq.validateAsync(req.body)
+    next()
+  } catch (error) {
+    next(error)
+  }
+}
+
+export { postContactValidation, patchContactValidation }
