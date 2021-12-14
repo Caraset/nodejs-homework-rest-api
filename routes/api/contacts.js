@@ -1,21 +1,28 @@
 import { Router } from 'express'
-import {
-  postContactValidation,
-  patchContactValidation,
-} from '../../model/validation.js'
-
 import ctrl from '../../controllers/contacts/index.js'
+
+import { contactSchema } from '../../schemas/index.js'
+import { validation, ctrlWrapper } from '../../middlewares/index.js'
+// import { validation } from '../../middlewares/validation.js'
 
 const router = Router()
 
-router.get('/', ctrl.getAll)
+router.get('/', ctrlWrapper(ctrl.getAll))
 
-router.get('/:contactId', ctrl.getById)
+router.get('/:contactId', ctrlWrapper(ctrl.getById))
 
-router.delete('/:contactId', ctrl.remove)
+router.delete('/:contactId', ctrlWrapper(ctrl.remove))
 
-router.post('/', postContactValidation, ctrl.add)
+router.post(
+  '/',
+  validation(contactSchema, { presence: 'required' }),
+  ctrlWrapper(ctrl.add),
+)
 
-router.patch('/:contactId', patchContactValidation, ctrl.update)
+router.patch(
+  '/:contactId',
+  validation(contactSchema),
+  ctrlWrapper(ctrl.updateById),
+)
 
 export default router
