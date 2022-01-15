@@ -10,19 +10,21 @@ const listContacts = async () => {
 
 const getContactById = async contactId => {
   const contacts = await listContacts()
-  return contacts.find(contact => contact.id === contactId)
+  return contacts.find(contact => contact.id === Number(contactId))
 }
 
 const removeContact = async contactId => {
   const contacts = await listContacts()
 
-  const contact = contacts.find(contact => contact.id === contactId)
+  const contact = contacts.find(contact => contact.id === Number(contactId))
 
   if (!contact) {
     return contact
   }
 
-  const updContacts = contacts.filter(contact => contact.id !== contactId)
+  const updContacts = contacts.filter(
+    contact => contact.id !== Number(contactId),
+  )
 
   writeFile(contactsPath, JSON.stringify(updContacts))
   return contact
@@ -32,8 +34,8 @@ const addContact = async body => {
   const contacts = await listContacts()
 
   for (let i = 0; i < contacts.length + 1; i++) {
-    if (contacts[i]?.id !== String(i + 1)) {
-      const contact = { id: String(i + 1), ...body }
+    if (contacts[i]?.id !== i + 1) {
+      const contact = { id: i + 1, ...body }
 
       const updContacts = [...contacts, contact].sort((a, b) => a.id - b.id)
       writeFile(contactsPath, JSON.stringify(updContacts))
@@ -44,7 +46,7 @@ const addContact = async body => {
 
 const updateContact = async (contactId, body) => {
   const contacts = await listContacts()
-  const oldContact = contacts.find(c => c.id === contactId)
+  const oldContact = contacts.find(c => c.id === Number(contactId))
 
   if (!oldContact) {
     return 1
@@ -56,7 +58,7 @@ const updateContact = async (contactId, body) => {
   }
 
   const updContacts = contacts.map(c => {
-    return c.id === contactId ? contact : c
+    return c.id === Number(contactId) ? contact : c
   })
 
   writeFile(contactsPath, JSON.stringify(updContacts))

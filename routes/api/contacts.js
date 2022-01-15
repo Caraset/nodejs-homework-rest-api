@@ -3,6 +3,7 @@ import ctrl from '../../controllers/contacts/index.js'
 
 import { contactSchema } from '../../schemas/index.js'
 import { validation, ctrlWrapper } from '../../middlewares/index.js'
+// import { validation } from '../../middlewares/validation.js'
 
 const router = Router()
 
@@ -18,7 +19,7 @@ router.post(
   ctrlWrapper(ctrl.add),
 )
 
-router.put(
+router.patch(
   '/:contactId',
   validation(contactSchema),
   ctrlWrapper(ctrl.updateById),
