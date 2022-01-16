@@ -1,24 +1,27 @@
-const express = require('express')
-const router = express.Router()
+import { Router } from 'express'
+import ctrl from '../../controllers/contacts/index.js'
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+import { contactSchema } from '../../schemas/index.js'
+import { validation, ctrlWrapper } from '../../middlewares/index.js'
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const router = Router()
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/', ctrlWrapper(ctrl.getAll))
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.get('/:contactId', ctrlWrapper(ctrl.getById))
 
-router.patch('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+router.delete('/:contactId', ctrlWrapper(ctrl.remove))
 
-module.exports = router
+router.post(
+  '/',
+  validation(contactSchema, { presence: 'required' }),
+  ctrlWrapper(ctrl.add),
+)
+
+router.put(
+  '/:contactId',
+  validation(contactSchema),
+  ctrlWrapper(ctrl.updateById),
+)
+
+export default router
