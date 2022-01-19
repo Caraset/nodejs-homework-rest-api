@@ -1,6 +1,6 @@
 import error from 'http-errors'
 import mongoose from 'mongoose'
-import { Contact } from '../../models/contacts.js'
+import { Contact } from '../../model/contacts.js'
 
 const { NotFound } = error
 const { isValidObjectId } = mongoose
