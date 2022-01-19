@@ -1,9 +1,8 @@
 import { Router } from 'express'
 import ctrl from '../../controllers/contacts/index.js'
 
-import { contactSchema } from '../../schemas/index.js'
+import { joiSchema, favoriteSchema } from '../../models/contacts.js'
 import { validation, ctrlWrapper } from '../../middlewares/index.js'
-// import { validation } from '../../middlewares/validation.js'
 
 const router = Router()
 
@@ -13,16 +12,14 @@ router.get('/:contactId', ctrlWrapper(ctrl.getById))
 
 router.delete('/:contactId', ctrlWrapper(ctrl.remove))
 
-router.post(
-  '/',
-  validation(contactSchema, { presence: 'required' }),
-  ctrlWrapper(ctrl.add),
-)
+router.post('/', validation(joiSchema), ctrlWrapper(ctrl.add))
+
+router.put('/:contactId', validation(joiSchema), ctrlWrapper(ctrl.updateById))
 
 router.patch(
-  '/:contactId',
-  validation(contactSchema),
-  ctrlWrapper(ctrl.updateById),
+  '/:contactId/favorite',
+  validation(favoriteSchema),
+  ctrlWrapper(ctrl.updateFavoriteById),
 )
 
 export default router

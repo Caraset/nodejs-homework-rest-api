@@ -3,13 +3,20 @@ import mongoose from 'mongoose'
 import { Contact } from '../../models/contacts.js'
 
 const { NotFound } = error
+const { isValidObjectId } = mongoose
 
-export const getById = async (req, res) => {
+export const updateFavoriteById = async (req, res) => {
   const { contactId } = req.params
+  const { favorite } = req.body
 
   let contact = null
-  if (mongoose.isValidObjectId(contactId)) {
-    contact = await Contact.findById(contactId)
+
+  if (isValidObjectId(contactId)) {
+    contact = await Contact.findByIdAndUpdate(
+      contactId,
+      { favorite },
+      { new: true },
+    )
   }
 
   if (!contact) {

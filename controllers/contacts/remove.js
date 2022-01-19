@@ -1,12 +1,19 @@
 import error from 'http-errors'
-import { removeContact } from '../../model/index.js'
+import mongoose from 'mongoose'
+import { Contact } from '../../models/contacts.js'
 
 const { NotFound } = error
+const { isValidObjectId } = mongoose
 
 export const remove = async (req, res) => {
   const { contactId } = req.params
 
-  const contact = await removeContact(contactId)
+  let contact = null
+
+  if (isValidObjectId(contactId)) {
+    contact = await Contact.findByIdAndRemove(contactId)
+  }
+
   if (!contact) {
     throw new NotFound('Not found')
   }
