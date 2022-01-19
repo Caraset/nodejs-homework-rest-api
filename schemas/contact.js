@@ -19,6 +19,13 @@ export const favoriteSchema = Joi.object({
   favorite: Joi.bool().required(),
 })
 
+export const contactSchemaReq = Joi.object({
+  name: nameSchema.required(),
+  email: emailSchema.required(),
+  phone: phoneSchema.required(),
+  favorite: Joi.bool(),
+})
+
 export const contactSchema = Joi.object({
   name: nameSchema,
   email: emailSchema,
