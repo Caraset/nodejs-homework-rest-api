@@ -17,5 +17,5 @@ export const remove = async (req, res) => {
   if (!contact) {
     throw new NotFound('Not found')
   }
-  res.status(200).json({ message: 'success', contact })
+  res.status(200).json({ message: 'contact deleted', contact })
 }
