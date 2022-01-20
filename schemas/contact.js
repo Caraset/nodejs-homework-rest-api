@@ -1,5 +1,7 @@
 import Joi from 'joi'
 
+const phoneRegexp = /^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$/
+
 const nameSchema = Joi.string()
   .regex(/^[a-zA-Z]+ [a-zA-Z]+$/i)
   .min(3)
@@ -11,10 +13,22 @@ const emailSchema = Joi.string().email({
   tlds: { allow: ['com', 'net'] },
 })
 
-const phoneSchema = Joi.string().regex(/^\([0-9]{3}\) [0-9]{3}-[0-9]{4}$/)
+const phoneSchema = Joi.string().regex(phoneRegexp)
+
+export const favoriteSchema = Joi.object({
+  favorite: Joi.bool().required(),
+})
+
+export const contactSchemaReq = Joi.object({
+  name: nameSchema.required(),
+  email: emailSchema.required(),
+  phone: phoneSchema.required(),
+  favorite: Joi.bool(),
+})
 
 export const contactSchema = Joi.object({
   name: nameSchema,
   email: emailSchema,
   phone: phoneSchema,
+  favorite: Joi.bool(),
 })

@@ -1,21 +1,22 @@
 import error from 'http-errors'
-import { updateContact } from '../../model/index.js'
+import mongoose from 'mongoose'
+import { Contact } from '../../model/contacts.js'
 
-const { NotFound, BadRequest } = error
+const { NotFound } = error
+const { isValidObjectId } = mongoose
 
 export const updateById = async (req, res) => {
-  const {
-    params: { contactId },
-    body,
-  } = req
+  const { contactId } = req.params
 
-  if (Object.keys(body).length === 0) {
-    throw new BadRequest('Missing fields')
+  let contact = null
+
+  if (isValidObjectId(contactId)) {
+    contact = await Contact.findByIdAndUpdate(contactId, req.body, {
+      new: true,
+    })
   }
 
-  const contact = await updateContact(contactId, body)
-
-  if (contact === 1) {
+  if (!contact) {
     throw new NotFound('Not found')
   }
   res.status(200).json({ message: 'success', contact })
