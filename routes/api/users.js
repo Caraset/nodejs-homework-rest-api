@@ -7,5 +7,6 @@ import { userSchema } from '../../schemas/users.js'
 const router = Router()
 
 router.post('/signup', validation(userSchema), ctrlWrapper(ctrl.register))
+router.post('/login', validation(userSchema), ctrlWrapper(ctrl.login))
 
 export default router
