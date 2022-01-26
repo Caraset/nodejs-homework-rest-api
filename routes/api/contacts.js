@@ -6,17 +6,17 @@ import {
   contactSchemaReq,
   favoriteSchema,
 } from '../../schemas/contact.js'
-import { validation, ctrlWrapper } from '../../middlewares/index.js'
+import { validation, ctrlWrapper, auth } from '../../middlewares/index.js'
 
 const router = Router()
 
-router.get('/', ctrlWrapper(ctrl.getAll))
+router.get('/', auth, ctrlWrapper(ctrl.getAll))
 
 router.get('/:contactId', ctrlWrapper(ctrl.getById))
 
 router.delete('/:contactId', ctrlWrapper(ctrl.remove))
 
-router.post('/', validation(contactSchemaReq), ctrlWrapper(ctrl.add))
+router.post('/', auth, validation(contactSchemaReq), ctrlWrapper(ctrl.add))
 
 router.put(
   '/:contactId',
