@@ -12,20 +12,22 @@ const router = Router()
 
 router.get('/', auth, ctrlWrapper(ctrl.getAll))
 
-router.get('/:contactId', ctrlWrapper(ctrl.getById))
+router.get('/:contactId', auth, ctrlWrapper(ctrl.getById))
 
-router.delete('/:contactId', ctrlWrapper(ctrl.remove))
+router.delete('/:contactId', auth, ctrlWrapper(ctrl.remove))
 
 router.post('/', auth, validation(contactSchemaReq), ctrlWrapper(ctrl.add))
 
 router.put(
   '/:contactId',
+  auth,
   validation(contactSchema),
   ctrlWrapper(ctrl.updateById),
 )
 
 router.patch(
   '/:contactId/favorite',
+  auth,
   validation(favoriteSchema),
   ctrlWrapper(ctrl.updateFavoriteById),
 )

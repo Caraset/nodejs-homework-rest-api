@@ -12,7 +12,10 @@ export const getById = async (req, res) => {
     contact = await Contact.findById(contactId)
   }
 
-  if (!contact) {
+  const { id: userId } = req.user
+  const ownerId = contact.owner.valueOf()
+
+  if (!contact || userId !== ownerId) {
     throw new NotFound('Not found')
   }
   res.status(200).json({ message: 'success', contact })

@@ -7,15 +7,19 @@ const { isValidObjectId } = mongoose
 
 export const remove = async (req, res) => {
   const { contactId } = req.params
+  const { id: userId } = req.user
 
-  let contact = null
+  const contact = await Contact.findById(contactId)
+  const ownerId = contact?.owner.valueOf() || null
 
-  if (isValidObjectId(contactId)) {
-    contact = await Contact.findByIdAndRemove(contactId)
-  }
-
-  if (!contact) {
+  if (!contact || userId !== ownerId) {
     throw new NotFound('Not found')
   }
-  res.status(200).json({ message: 'contact deleted', contact })
+
+  let deletedContact = null
+  if (isValidObjectId(contactId)) {
+    deletedContact = await Contact.findByIdAndRemove(contactId)
+  }
+
+  res.status(200).json({ message: 'contact deleted', contact: deletedContact })
 }
