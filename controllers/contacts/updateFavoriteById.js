@@ -8,19 +8,24 @@ const { isValidObjectId } = mongoose
 export const updateFavoriteById = async (req, res) => {
   const { contactId } = req.params
   const { favorite } = req.body
+  const { id: userId } = req.user
 
-  let contact = null
+  const contact = await Contact.findById(contactId)
+  const ownerId = contact?.owner.valueOf()
+
+  if (!contact || userId !== ownerId) {
+    throw new NotFound('Not found')
+  }
+
+  let updatedContact = null
 
   if (isValidObjectId(contactId)) {
-    contact = await Contact.findByIdAndUpdate(
+    updatedContact = await Contact.findByIdAndUpdate(
       contactId,
       { favorite },
       { new: true },
     )
   }
 
-  if (!contact) {
-    throw new NotFound('Not found')
-  }
-  res.status(200).json({ message: 'success', contact })
+  res.status(200).json({ message: 'success', contact: updatedContact })
 }
