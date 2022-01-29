@@ -1,5 +1,6 @@
 import error from 'http-errors'
 import bcrypt from 'bcryptjs'
+import gravatar from 'gravatar'
 import { User } from '../../model/users.js'
 
 const { Conflict } = error
@@ -14,11 +15,20 @@ export const register = async (req, res) => {
   }
 
   const hashedPassword = hashSync(password, genSaltSync(10))
+  const avatarURL = gravatar.url(email)
 
-  const result = await User.create({ email, password: hashedPassword })
+  const result = await User.create({
+    email,
+    password: hashedPassword,
+    avatarURL,
+  })
 
   res.status(201).json({
     message: 'success',
-    user: { email: result.email, subsctiption: result.subsctiption },
+    user: {
+      email: result.email,
+      subscription: result.subscription,
+      avatarURL: result.avatarURL,
+    },
   })
 }
