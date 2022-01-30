@@ -1,6 +1,7 @@
 import error from 'http-errors'
 import mongoose from 'mongoose'
-import { Contact } from '../../model/contacts.js'
+
+import contactsDao from '../../dao/contactsDao.js'
 
 const { NotFound } = error
 const { isValidObjectId } = mongoose
@@ -10,7 +11,7 @@ export const updateFavoriteById = async (req, res) => {
   const { favorite } = req.body
   const { id: userId } = req.user
 
-  const contact = await Contact.findById(contactId)
+  const contact = await contactsDao.getContactById(contactId)
   const ownerId = contact?.owner.valueOf()
 
   if (!contact || userId !== ownerId) {
@@ -20,7 +21,7 @@ export const updateFavoriteById = async (req, res) => {
   let updatedContact = null
 
   if (isValidObjectId(contactId)) {
-    updatedContact = await Contact.findByIdAndUpdate(
+    updatedContact = await contactsDao.getContactByIdAndUpdate(
       contactId,
       { favorite },
       { new: true },

@@ -1,7 +1,7 @@
 import error from 'http-errors'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { User } from '../../model/users.js'
+import userDao from '../../dao/userDao.js'
 
 const { Unauthorized } = error
 const { compareSync } = bcrypt
@@ -10,7 +10,8 @@ const { SECRET_KEY } = process.env
 
 export const login = async (req, res) => {
   const { email, password } = req.body
-  const user = await User.findOne({ email })
+
+  const user = await userDao.findUserByEmail({ email })
 
   if (!user || !compareSync(password, user.password)) {
     throw new Unauthorized('Email or password is wrong')
@@ -22,7 +23,8 @@ export const login = async (req, res) => {
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' })
 
-  await User.findByIdAndUpdate(user._id, { token })
+  user.token = token
+  await userDao.findUserByIdAndUpdate(user._id, { token })
 
   res.status(200).json({
     message: 'success',

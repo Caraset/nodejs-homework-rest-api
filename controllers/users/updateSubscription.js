@@ -1,5 +1,6 @@
 import error from 'http-errors'
-import { User } from '../../model/users.js'
+
+import userDao from '../../dao/userDao.js'
 
 const { BadRequest } = error
 const template = ['starter', 'pro', 'business']
@@ -14,7 +15,7 @@ export const updateSubscription = async (req, res) => {
     )
   }
 
-  const updatedContact = await User.findByIdAndUpdate(
+  const updatedContact = await userDao.findUserByIdAndUpdate(
     id,
     { subscription },
     {

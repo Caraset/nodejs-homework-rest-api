@@ -1,14 +1,14 @@
 import error from 'http-errors'
 import bcrypt from 'bcryptjs'
 import gravatar from 'gravatar'
-import { User } from '../../model/users.js'
+import userDao from '../../dao/userDao.js'
 
 const { Conflict } = error
 const { genSaltSync, hashSync } = bcrypt
 
 export const register = async (req, res) => {
   const { email, password } = req.body
-  const user = await User.findOne({ email })
+  const user = await userDao.findUserByEmail({ email })
 
   if (user) {
     throw new Conflict('Email in use')
@@ -17,7 +17,7 @@ export const register = async (req, res) => {
   const hashedPassword = hashSync(password, genSaltSync(10))
   const avatarURL = gravatar.url(email)
 
-  const result = await User.create({
+  const result = await userDao.createUser({
     email,
     password: hashedPassword,
     avatarURL,

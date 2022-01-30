@@ -1,6 +1,6 @@
 import error from 'http-errors'
 import mongoose from 'mongoose'
-import { Contact } from '../../model/contacts.js'
+import contactsDao from '../../dao/contactsDao.js'
 
 const { NotFound } = error
 const { isValidObjectId } = mongoose
@@ -9,7 +9,7 @@ export const remove = async (req, res) => {
   const { contactId } = req.params
   const { id: userId } = req.user
 
-  const contact = await Contact.findById(contactId)
+  const contact = await contactsDao.getContactById(contactId)
   const ownerId = contact?.owner.valueOf() || null
 
   if (!contact || userId !== ownerId) {
@@ -18,7 +18,7 @@ export const remove = async (req, res) => {
 
   let deletedContact = null
   if (isValidObjectId(contactId)) {
-    deletedContact = await Contact.findByIdAndRemove(contactId)
+    deletedContact = await contactsDao.getContactByIdAndRemove(contactId)
   }
 
   res.status(200).json({ message: 'contact deleted', contact: deletedContact })

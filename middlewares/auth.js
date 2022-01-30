@@ -1,6 +1,6 @@
 import error from 'http-errors'
 import jwt from 'jsonwebtoken'
-import { User } from '../model/users.js'
+import userDao from '../dao/userDao.js'
 
 const { Unauthorized } = error
 const { verify } = jwt
@@ -16,7 +16,7 @@ export const auth = async (req, res, next) => {
     }
 
     const { id } = verify(token, SECRET_KEY)
-    const user = await User.findById(id)
+    const user = await userDao.findUserById(id)
 
     if (!user || !user.token) {
       throw new Unauthorized('Not authorized')
