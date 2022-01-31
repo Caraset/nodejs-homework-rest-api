@@ -1,6 +1,6 @@
 import error from 'http-errors'
 import mongoose from 'mongoose'
-import { Contact } from '../../model/contacts.js'
+import contactsDao from '../../dao/contactsDao.js'
 
 const { NotFound } = error
 
@@ -9,11 +9,11 @@ export const getById = async (req, res) => {
 
   let contact = null
   if (mongoose.isValidObjectId(contactId)) {
-    contact = await Contact.findById(contactId)
+    contact = await contactsDao.getContactById(contactId)
   }
 
   const { id: userId } = req.user
-  const ownerId = contact.owner.valueOf()
+  const ownerId = contact?.owner.valueOf()
 
   if (!contact || userId !== ownerId) {
     throw new NotFound('Not found')

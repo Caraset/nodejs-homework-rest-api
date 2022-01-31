@@ -1,11 +1,11 @@
-import { Contact } from '../../model/contacts.js'
+import contactsDao from '../../dao/contactsDao.js'
 
 export const getAll = async (req, res) => {
   const { id } = req.user
   const { page = 1, limit = 5, favorite = null } = req.query
   const skip = (page - 1) * limit
-  console.log('favorite: ', favorite === 'false')
-  const contacts = await Contact.find(
+
+  const contacts = await contactsDao.getAllContacts(
     {
       owner: id,
       ...(favorite === 'false' || favorite === 'true' ? { favorite } : {}),
