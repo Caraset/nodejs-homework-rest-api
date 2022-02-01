@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import userDao from '../../dao/userDao.js'
 
-const { Unauthorized } = error
+const { Unauthorized, Forbidden } = error
 const { compareSync } = bcrypt
 
 const { SECRET_KEY } = process.env
@@ -15,6 +15,10 @@ export const login = async (req, res) => {
 
   if (!user || !compareSync(password, user.password)) {
     throw new Unauthorized('Email or password is wrong')
+  }
+
+  if (user.verify === false) {
+    throw new Forbidden('Not verified')
   }
 
   const payload = {
