@@ -4,6 +4,9 @@ const findUserById = async id => User.findById(id)
 
 const findUserByEmail = async email => User.findOne(email)
 
+const findUserByVerificationToken = async verificationToken =>
+  User.findOne(verificationToken)
+
 const findUserByIdAndUpdate = async (id, payload, options = {}) =>
   User.findByIdAndUpdate(id, payload, { ...options })
 
@@ -14,4 +17,5 @@ export default {
   findUserByEmail,
   findUserByIdAndUpdate,
   createUser,
+  findUserByVerificationToken,
 }
